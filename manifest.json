@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "dropheus",
   "description": "find cheaper alternatives or detect dropshipping on etsy, amazon or ebay.",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "action": {
     "default_title": "Extension Base",
     "default_popup": "popup.html"
@@ -22,8 +22,17 @@
   ],
   "browser_specific_settings": {
     "gecko": {
-      "id": "im@lynn.pt",
-      "strict_min_version": "109.0"
+      "id": "ivie@ivie.codes",
+      "strict_min_version": "128.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
-  }
+  },
+  "optional_permissions": [
+    "<all_urls>"
+  ],
+  "optional_host_permissions": [
+    "<all_urls>"
+  ]
 }
