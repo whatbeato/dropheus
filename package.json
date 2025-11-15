@@ -1,0 +1,12 @@
+{
+  "name": "orphshipper",
+  "version": "0.1.0",
+  "description": "check if an etsy product is dropshipped or not",
+  "scripts": {
+    "web-ext": "web-ext run",
+    "lint": "echo 'no linter configured'"
+  },
+  "devDependencies": {},
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Extension Base",
+  "description": "A minimal cross-browser Chrome/Firefox extension scaffold (MV3).",
+  "version": "0.1.0",
+  "action": {
+    "default_title": "Extension Base",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "extension-base@example.com",
+      "strict_min_version": "109.0"
+    }
+  }
+}

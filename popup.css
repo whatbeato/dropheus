@@ -1,0 +1,21 @@
+body {
+    background-color:#ffefe8;
+    font-size: xx-small;
+    color:#F1641E;
+    font-family: "Inter";
+    padding-left: 5px;
+    padding-right: 30px;
+}
+
+button {
+    display: inline-block;
+    background-color: #F1641E;
+    color: #ffffff;
+    font-family: 'Inter';
+    font-weight: 700;
+    font-size: 0.7rem;
+    padding: 0.7em 2.0em;
+    border-radius: 900px;
+    box-shadow: 0 2px 8px 0 #F1641E
+}
+
