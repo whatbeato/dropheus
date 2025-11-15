@@ -9,24 +9,20 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const title = await getTitleFromActiveTab();
       if (!title) {
-        setStatus('could not find the title... are you on etsy?');
+        setStatus('could not find the title... are you on etsy, amazon or ebay?');
         return;
       }
 
-  setStatus('Querying dropship API...');
-  // Use the provided fonz.pt API host
-  const apiHost = 'https://j4cswgw8gwk8wcs4o4ww0oks.fonz.pt';
-  const apiUrl = `${apiHost}/search/?q=${encodeURIComponent(title)}`;
+      setStatus('Querying dropship API...');
+      const apiHost = 'https://j4cswgw8gwk8wcs4o4ww0oks.fonz.pt';
+      const apiUrl = `${apiHost}/search/?q=${encodeURIComponent(title)}`;
 
-      // Ask for JSON but accept plain text too. Some dev endpoints return simple text.
       const resp = await fetch(apiUrl, { headers: { Accept: 'application/json, text/plain, */*' } });
       if (!resp.ok) {
-        // Try to show any returned text for easier debugging
         const maybeText = await resp.text().catch(() => null);
         throw new Error(`API returned ${resp.status} from ${apiHost}${maybeText ? `: ${maybeText}` : ''}`);
       }
 
-      // If server does not return JSON (e.g. "API is running!"), show the raw text instead of failing
       const contentType = (resp.headers.get('content-type') || '').toLowerCase();
       let data;
       if (contentType.includes('application/json')) {
@@ -34,18 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
           data = await resp.json();
         } catch (e) {
           const raw = await resp.text().catch(() => null);
-          setStatus(raw ? `API returned invalid JSON: ${raw}` : `API returned invalid JSON: ${e.message}`);
+          setStatus(raw ? `api returned invalid json: ${raw}` : `api returned invalid json: ${e.message}`);
           return;
         }
       } else {
-        // Non-JSON response: display the text directly (useful for dev endpoints)
         const text = await resp.text().catch(() => null);
-        setStatus(text || 'API returned non-JSON response');
+        setStatus(text || 'api returned non-json response');
         return;
       }
 
       if (!Array.isArray(data) || data.length === 0) {
-        setStatus('No results found.');
+        setStatus('no results found');
         return;
       }
 
@@ -53,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
       renderResults(data);
     } catch (err) {
       console.error(err);
-      setStatus('Error: ' + (err.message || err));
+      setStatus('error: ' + (err.message || err));
     }
   });
 
@@ -75,20 +70,45 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!tabs || tabs.length === 0) return resolve('');
           const tab = tabs[0];
 
-          // Execute a small script in the page to extract a likely product title.
           chrome.scripting.executeScript(
             {
               target: { tabId: tab.id },
               func: () => {
-                // Prefer og:title meta, then h1, then document.title
-                const og = document.querySelector('meta[property="og:title"]') || document.querySelector('meta[name="og:title"]');
-                if (og && og.content) return og.content.trim();
+                try {
+                  const host = (location && location.hostname) ? location.hostname.toLowerCase() : '';
 
-                const h1 = document.querySelector('h1');
-                if (h1 && h1.innerText) return h1.innerText.trim();
+                  if (host.includes('amazon.')) {
+                    const amazonSel = document.getElementById('productTitle') || document.querySelector('#title span#productTitle') || document.getElementById('ebooksProductTitle') || document.querySelector('#title');
+                    if (amazonSel) {
+                      const txt = (amazonSel.innerText || amazonSel.textContent || '').trim();
+                      if (txt) return txt;
+                    }
+                  }
 
-                if (document.title) return document.title.trim();
+                  if (host.includes('ebay.')) {
+                    const ebaySel = document.querySelector('#itemTitle') || document.querySelector('h1[itemprop="name"]') || document.querySelector('.it-ttl') || document.querySelector('h1');
+                    if (ebaySel) {
+                      let txt = (ebaySel.innerText || ebaySel.textContent || '').trim();
+                      txt = txt.replace(/^Details\s+about\s*/i, '').trim();
+                      if (txt) return txt;
+                    }
+                  }
 
+                  const og = document.querySelector('meta[property="og:title"]') || document.querySelector('meta[name="og:title"]');
+                  if (og && og.content) return og.content.trim();
+
+                  const h1 = document.querySelector('h1');
+                  if (h1 && h1.innerText) return h1.innerText.trim();
+
+                  const titleSelectors = ['[data-test-listing-title]', '.product-title', '.title', '.listing-title', '.wt-text-body-03'];
+                  for (const s of titleSelectors) {
+                    const el = document.querySelector(s);
+                    if (el && (el.innerText || el.textContent)) return (el.innerText || el.textContent).trim();
+                  }
+
+                  if (document.title) return document.title.trim();
+                } catch (e) {
+                }
                 return '';
               }
             },
@@ -120,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
       card.className = 'card';
 
       const img = document.createElement('img');
-      // Image URLs may start with //
       let src = item.image || '';
       if (src.startsWith('//')) src = 'https:' + src;
       if (!src.startsWith('http')) src = 'https:' + src;
@@ -133,10 +152,9 @@ document.addEventListener('DOMContentLoaded', () => {
       title.textContent = item.title || '';
 
       const btn = document.createElement('button');
-      btn.textContent = 'Open on AliExpress';
+      btn.textContent = 'see on aliexpress';
       btn.addEventListener('click', () => {
         let u = item.url || '';
-        // urls may be protocol-relative
         if (u.startsWith('//')) u = 'https:' + u;
         if (!/^https?:\/\//i.test(u)) u = 'https://' + u.replace(/^\/+/, '');
         chrome.tabs.create({ url: u });
