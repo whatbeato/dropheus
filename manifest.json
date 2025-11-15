@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "orphshipper",
+  "name": "dropheus",
   "description": "find cheaper alternatives or detect dropshipping on etsy, amazon or ebay.",
   "version": "0.1.0",
   "action": {
