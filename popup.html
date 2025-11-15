@@ -3,24 +3,26 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>dropheus</title>
     <link rel="stylesheet" href="popup.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900" rel="stylesheet">
   </head>
   <body>
-    <div class="container">
-        <h1>dropheus</h1>
+  <div class="container">
+    <h1>dropheus</h1>
 
-        <h2>find out if a etsy product is dropshipped or not<h2>
-        <div class="inputs">
-            <div class="etsylinkbutton">
-                <button>check if this item is dropshipped</button>
-            </div>
-        </div>
-      </main>
+    <h2>find out if an Etsy product is dropshipped or not</h2>
+    <div class="inputs">
+      <div class="etsylinkbutton">
+        <button id="check-btn">Check this item</button>
+      </div>
     </div>
 
-    <script src="popup.js"></script>
+    <div id="results" class="results"></div>
+  </div>
+
+  <script src="popup.js"></script>
   </body>
 </html>
