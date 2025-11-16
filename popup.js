@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      setStatus('Querying dropship API...');
+      setStatus('checking...');
       const apiHost = 'https://j4cswgw8gwk8wcs4o4ww0oks.fonz.pt';
       const apiUrl = `${apiHost}/search/?q=${encodeURIComponent(productInfo.title)}`;
 
